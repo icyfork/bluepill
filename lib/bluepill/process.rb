@@ -386,12 +386,12 @@ module Bluepill
     def pid_from_file
       return @actual_pid if cache_actual_pid? && @actual_pid
       @actual_pid = begin
-        if pid_file
-          if File.exists?(pid_file)
-            str = File.read(pid_file)
+        if actual_pid_file
+          if File.exists?(actual_pid_file)
+            str = File.read(actual_pid_file)
             str.to_i if str.size > 0
           else
-            logger.warning("pid_file #{pid_file} does not exist or cannot be read")
+            logger.warning("pid_file #{actual_pid_file} does not exist or cannot be read")
             nil
           end
         end
@@ -403,6 +403,10 @@ module Bluepill
       (pid =~ /\A\d+\z/) ? pid.to_i : nil
     end
 
+    def actual_pid_file
+      @pid_file.to_s.gsub("{{PID}}", actual_pid.to_s)
+    end
+
     def actual_pid=(pid)
       @actual_pid = pid
     end
@@ -412,7 +416,7 @@ module Bluepill
     end
 
     def unlink_pid
-      File.unlink(pid_file) if pid_file && File.exists?(pid_file)
+      File.unlink(actual_pid_file) if actual_pid_file && File.exists?(actual_pid_file)
     rescue Errno::ENOENT
     end
 
@@ -477,4 +481,3 @@ module Bluepill
     end
   end
 end
-
