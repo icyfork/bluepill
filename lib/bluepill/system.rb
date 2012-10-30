@@ -65,6 +65,8 @@ module Bluepill
         drop_privileges(options[:uid], options[:gid], options[:supplementary_groups])
 
         # if we cannot write the pid file as the provided user, err out
+        # icy: Because we use PID file before the process is lauched,
+        # icy: there isn't way to support substitutable pid file :(
         exit unless can_write_pid_file(options[:pid_file], options[:logger])
 
         to_daemonize = lambda do

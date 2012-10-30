@@ -404,7 +404,11 @@ module Bluepill
     end
 
     def actual_pid_file
-      pid_file.to_s.gsub("{{PID}}", actual_pid.to_s)
+      if @actual_pid
+        pid_file.to_s.gsub("{{PID}}", @actual_pid.to_s)
+      else
+        pid_file
+      end
     end
 
     def actual_pid=(pid)
